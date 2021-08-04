@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             R.id.leanbackButton -> {
                 supportActionBar?.hide()
                 window.insetsController?.let {
-                    it.hide(WindowInsets.Type.systemBars() or WindowInsets.Type.navigationBars())
+                    it.hide(WindowInsets.Type.systemBars() or WindowInsets.Type.navigationBars()) // 린백 모드의 경우 Behavior 이후 스테이터스 바가 돌아오지 않는 이슈가 있음.
                     it.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_TOUCH
                     window.navigationBarColor = getColor(R.color.black)
                 }
