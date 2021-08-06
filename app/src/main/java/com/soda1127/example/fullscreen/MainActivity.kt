@@ -1,19 +1,17 @@
 package com.soda1127.example.fullscreen
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowInsetsController.*
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.soda1127.example.fullscreen.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +36,74 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        lightStatusBarButton.setOnClickListener {
+            setStatusBarMode(isLight = true)
+        }
+        lightNavigationBarButton.setOnClickListener {
+            setNavigationBarMode(isLight = true)
+        }
+        darkStatusBarButton.setOnClickListener {
+            setStatusBarMode(isLight = false)
+        }
+        darkNavigationBarButton.setOnClickListener {
+            setNavigationBarMode(isLight = false)
+        }
+    }
+
+    private fun setStatusBarMode(isLight: Boolean) {
+        window.statusBarColor = if (isLight) {
+            Color.WHITE
+        } else {
+            ContextCompat.getColor(this, R.color.design_default_color_primary_dark)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.let {
+                if (isLight) {
+                    it.setSystemBarsAppearance(
+                        APPEARANCE_LIGHT_STATUS_BARS, // value
+                        APPEARANCE_LIGHT_STATUS_BARS // mask
+                    )
+                } else {
+                    it.setSystemBarsAppearance(
+                        0, // value
+                        APPEARANCE_LIGHT_STATUS_BARS // mask
+                    )
+                }
+            }
+        } else {
+            val lFlags = window.decorView.systemUiVisibility
+            window.decorView.systemUiVisibility =
+                if (isLight.not()) lFlags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                else lFlags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
+    }
+
+    private fun setNavigationBarMode(isLight: Boolean) {
+        window.navigationBarColor = if (isLight) {
+            Color.WHITE
+        } else {
+            Color.BLACK
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.let {
+                if (isLight) {
+                    it.setSystemBarsAppearance(
+                        APPEARANCE_LIGHT_NAVIGATION_BARS,
+                        APPEARANCE_LIGHT_NAVIGATION_BARS
+                    )
+                } else {
+                    it.setSystemBarsAppearance(
+                        0,
+                        APPEARANCE_LIGHT_NAVIGATION_BARS
+                    )
+                }
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val lFlags = window.decorView.systemUiVisibility
+            window.decorView.systemUiVisibility =
+                if (isLight.not()) lFlags and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+                else lFlags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -46,28 +112,26 @@ class MainActivity : AppCompatActivity() {
             R.id.leanbackButton -> {
                 supportActionBar?.hide()
                 window.insetsController?.let {
-                    it.hide(WindowInsets.Type.systemBars() or WindowInsets.Type.navigationBars()) // 린백 모드의 경우 Behavior 이후 스테이터스 바가 돌아오지 않는 이슈가 있음.
+                    it.hide(WindowInsets.Type.systemBars()) // 린백 모드의 경우 Behavior 이후 스테이터스 바가 돌아오지 않는 이슈가 있음.
                     it.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_TOUCH
-                    window.navigationBarColor = getColor(R.color.black)
                 }
             }
             R.id.immersiveButton,
             R.id.stickyImmersiveButton -> {
                 supportActionBar?.hide()
                 window.insetsController?.let {
-                    it.hide(WindowInsets.Type.systemBars() or WindowInsets.Type.navigationBars())
+                    it.hide(WindowInsets.Type.systemBars())
                     it.systemBarsBehavior = when (checkedId) {
                         R.id.immersiveButton -> BEHAVIOR_SHOW_BARS_BY_SWIPE
                         R.id.stickyImmersiveButton -> BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
                         else -> -1
                     }
-                    window.navigationBarColor = getColor(R.color.black)
                 }
             }
             R.id.showSystemUIButton -> {
                 window.insetsController?.let {
                     supportActionBar?.show()
-                    it.show(WindowInsets.Type.systemBars() or WindowInsets.Type.navigationBars())
+                    it.show(WindowInsets.Type.systemBars())
                 }
             }
         }

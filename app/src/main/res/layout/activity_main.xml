@@ -7,19 +7,37 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/topButton"
+        android:id="@+id/lightStatusBarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="top"
+        android:text="light StatusBar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/bottomButton"
+        android:id="@+id/darkStatusBarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="bottom"
+        android:text="dark StatusBar"
+        app:layout_constraintTop_toBottomOf="@id/lightStatusBarButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/lightNavigationBarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="light NavigationBar"
+        app:layout_constraintBottom_toTopOf="@id/darkNavigationBarButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/darkNavigationBarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dark NavigationBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
