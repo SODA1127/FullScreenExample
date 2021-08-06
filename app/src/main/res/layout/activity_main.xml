@@ -10,18 +10,20 @@
         android:id="@+id/lightStatusBarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:text="light StatusBar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toStartOf="@id/darkStatusBarButton"
+        app:layout_constraintHorizontal_chainStyle="packed" />
 
     <Button
         android:id="@+id/darkStatusBarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="dark StatusBar"
-        app:layout_constraintTop_toBottomOf="@id/lightStatusBarButton"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/lightStatusBarButton"
+        app:layout_constraintStart_toEndOf="@id/lightStatusBarButton"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
@@ -29,18 +31,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="light NavigationBar"
-        app:layout_constraintBottom_toTopOf="@id/darkNavigationBarButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toStartOf="@id/darkNavigationBarButton"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/darkNavigationBarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="dark NavigationBar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/lightNavigationBarButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <RadioGroup
         android:id="@+id/fullScreenRadioGroup"
