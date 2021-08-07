@@ -12,5 +12,13 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:ignore="NewApi">
+            shortEdges <!-- default, shortEdges, never -->
+        </item>
+
+        <item name="android:windowBackground">
+            @color/teal_200
+        </item>
     </style>
 </resources>

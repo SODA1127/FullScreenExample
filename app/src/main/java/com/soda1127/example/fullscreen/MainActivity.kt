@@ -1,17 +1,17 @@
 package com.soda1127.example.fullscreen
 
 import android.app.Activity
+import android.content.res.Configuration
+import android.content.res.Configuration.*
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
+import android.view.*
 import android.view.WindowInsetsController.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.*
 import com.soda1127.example.fullscreen.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -50,6 +50,67 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val cutout = window.decorView.rootWindowInsets.displayCutout
+            if (cutout != null && cutout.boundingRects.isNotEmpty()) {
+                binding.fullScreenSwitch.isVisible = true
+                binding.fullScreenSwitch.setOnCheckedChangeListener { _, isChecked ->
+                    window.handleCutoutInsetInSafeArea(isChecked)
+                }
+            } else {
+                binding.fullScreenSwitch.isVisible = false
+                binding.fullScreenSwitch.setOnCheckedChangeListener(null)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun Window.handleCutoutInsetInSafeArea(isFullMode: Boolean) {
+        WindowCompat.setDecorFitsSystemWindows(this, isFullMode.not())
+        // 만약 필요하다면 Cutout에서 당신이 원하는 Inset을 추출하여 적용할 수 있음
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val displayCutout = insets.displayCutout
+            if (displayCutout != null && displayCutout.boundingRects.size > 0) {
+                when (resources.configuration.orientation) {
+                    ORIENTATION_PORTRAIT -> {
+                        /*v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                            topMargin = if (isFullMode) {
+                                0
+                            } else {
+                                displayCutout.safeInsetTop
+                            }
+                            bottomMargin = if (isFullMode) {
+                                0
+                            } else {
+                                displayCutout.safeInsetBottom
+                            }
+                        }*/
+                    }
+                    ORIENTATION_LANDSCAPE -> {
+                        /*v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                            marginStart = if (isFullMode) {
+                                0
+                            } else {
+                                displayCutout.safeInsetLeft
+                            }
+                            marginEnd = if (isFullMode) {
+                                0
+                            } else {
+                                displayCutout.safeInsetRight
+                            }
+                        }*/
+                    }
+                    ORIENTATION_UNDEFINED -> Unit
+                    ORIENTATION_SQUARE -> Unit
+                }
+            }
+            ViewCompat.setOnApplyWindowInsetsListener(binding.root, null)
+            insets
+        }
+    }
+
     private fun setStatusBarMode(isLight: Boolean) {
         window.statusBarColor = if (isLight) {
             Color.WHITE
@@ -65,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 } else {
                     it.setSystemBarsAppearance(
-                        0, // value
+                        0, // clear value
                         APPEARANCE_LIGHT_STATUS_BARS // mask
                     )
                 }
@@ -88,13 +149,13 @@ class MainActivity : AppCompatActivity() {
             window.insetsController?.let {
                 if (isLight) {
                     it.setSystemBarsAppearance(
-                        APPEARANCE_LIGHT_NAVIGATION_BARS,
-                        APPEARANCE_LIGHT_NAVIGATION_BARS
+                        APPEARANCE_LIGHT_NAVIGATION_BARS, // value
+                        APPEARANCE_LIGHT_NAVIGATION_BARS // mask
                     )
                 } else {
                     it.setSystemBarsAppearance(
-                        0,
-                        APPEARANCE_LIGHT_NAVIGATION_BARS
+                        0, // clear value
+                        APPEARANCE_LIGHT_NAVIGATION_BARS // mask
                     )
                 }
             }
@@ -140,6 +201,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     @Suppress("DEPRECATION")
     private fun setFullScreen(checkedId: Int) {
+        binding.fullScreenSwitch.isChecked = false
         window.decorView.systemUiVisibility = when (checkedId) {
             R.id.leanbackButton -> {
                 supportActionBar?.hide()

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/white">
 
     <Button
         android:id="@+id/lightStatusBarButton"
@@ -26,24 +27,23 @@
         app:layout_constraintStart_toEndOf="@id/lightStatusBarButton"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/lightNavigationBarButton"
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/statusBarButtonsBarrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="light NavigationBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/darkNavigationBarButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed" />
+        app:constraint_referenced_ids="lightStatusBarButton,darkStatusBarButton"
+        app:barrierDirection="bottom"/>
 
-    <Button
-        android:id="@+id/darkNavigationBarButton"
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/fullScreenSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="dark NavigationBar"
-        app:layout_constraintStart_toEndOf="@id/lightNavigationBarButton"
+        app:layout_constraintTop_toBottomOf="@id/statusBarButtonsBarrier"
+        app:layout_constraintBottom_toTopOf="@id/fullScreenRadioGroup"
+        android:text="Full Screen Switch for Cutout"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:visibility="gone"/>
 
     <RadioGroup
         android:id="@+id/fullScreenRadioGroup"
@@ -79,5 +79,24 @@
             android:text="Show System UI" />
 
     </RadioGroup>
+
+    <Button
+        android:id="@+id/lightNavigationBarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="light NavigationBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/darkNavigationBarButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed" />
+
+    <Button
+        android:id="@+id/darkNavigationBarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dark NavigationBar"
+        app:layout_constraintStart_toEndOf="@id/lightNavigationBarButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
